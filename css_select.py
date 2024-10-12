@@ -7,13 +7,13 @@ import argparse
 import bs4
 import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument('selector')
-parser.add_argument('-a', '--attribute', help='Only output this specified attribute, if present')
-parser.add_argument('-b', '--base', help='Use this URL as the base for links')
-parser.add_argument('-t', '--text', action='store_true', help='Only output the text content')
+args_parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+args_parser.add_argument('selector')
+args_parser.add_argument('-a', '--attribute', help='Only output this specified attribute, if present')
+args_parser.add_argument('-b', '--base', help='Use this URL as the base for links')
+args_parser.add_argument('-t', '--text', action='store_true', help='Only output the text content')
+args = args_parser.parse_args()
 
-args = parser.parse_args()
 soup = bs4.BeautifulSoup(sys.stdin, 'html.parser')
 results = soup.select(args.selector)
 
@@ -29,5 +29,5 @@ elif args.text:
 else:
     transform = lambda tag: str(tag)
 
-final = (transform(tag) for tag in results)
+final = [transform(tag) for tag in results]
 print(*final, sep='\n')
