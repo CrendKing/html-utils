@@ -1,6 +1,6 @@
-'''
+"""
 Given an URL to a Wikipedia page with comparison tables, merge all the tables using the primary key, then output as CSV.
-'''
+"""
 
 if __name__ == '__main__':
     from urllib.request import urlopen
@@ -53,20 +53,20 @@ if __name__ == '__main__':
             headers = [get_cell_effective_text(cell) for cell in header_rows[0].find_all('th')]
 
         for tr in data_rows:
-            '''
+            """
             in a wikitable, the first column of each row is always <th>
             if the other columns are also <th>, it is a header row, and we only need the first one if there are multiple
             otherwise, it is a data row, and we use the value of the first column as the primary key for merging
-            '''
+            """
 
             if tr.td:
-                data.append([get_cell_effective_text(cell) for cell in tr.find_all(['th', 'td'])][0:len(headers)])
+                data.append([get_cell_effective_text(cell) for cell in tr.find_all(['th', 'td'])][0 : len(headers)])
 
         curr_dataframe = pandas.DataFrame(data, columns=headers, copy=False).set_index(headers[0])
         combined_dataframe = curr_dataframe if combined_dataframe is None else combined_dataframe.combine_first(curr_dataframe)
 
     if combined_dataframe is None:
-        print("No Wikitable in URL")
+        print('No Wikitable in URL')
     else:
         with open(args.out_file, 'w', newline='') if args.out_file else sys.stdout as output:
             combined_dataframe.to_csv(output, na_rep='?')

@@ -1,6 +1,6 @@
-'''
+"""
 Parse HTML from stdin and output elements filtered by specified CSS selectors and arguments.
-'''
+"""
 
 from urllib.parse import urljoin
 import argparse
@@ -18,6 +18,7 @@ soup = bs4.BeautifulSoup(sys.stdin, 'html.parser')
 results = soup.select(args.selector)
 
 if args.attribute:
+
     def transform(tag):
         attr_value = tag.get(args.attribute) or ''
         if args.base and tag.name == 'a' and args.attribute == 'href':

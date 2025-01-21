@@ -1,2 +1,2 @@
-beautifulsoup4>=4
-pandas>=2
+beautifulsoup4
+pandas
