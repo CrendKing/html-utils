@@ -1,0 +1,9 @@
+[project]
+name = 'html-utils'
+version = '1'
+readme = 'README.md'
+requires-python = '>= 3'
+dependencies = [
+    'bs4',
+    'pandas',
+]
