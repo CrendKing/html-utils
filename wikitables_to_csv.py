@@ -2,19 +2,14 @@
 Given an URL to a Wikipedia page with comparison tables, merge all the tables using the primary key, then output as CSV.
 """
 
+import argparse
+import sys
+from urllib.request import urlopen
+
+import bs4
+import pandas
+
 if __name__ == '__main__':
-    from urllib.request import urlopen
-    import argparse
-    import bs4
-    import pandas
-    import sys
-
-    def get_cell_effective_text(cell):
-        if cell.img:
-            return ' '.join([img.get('alt') for img in cell.find_all('img')])
-        else:
-            return cell.get_text().strip()
-
     args_parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     args_parser.add_argument('url')
     args_parser.add_argument('--out-file')
@@ -23,6 +18,12 @@ if __name__ == '__main__':
     html_source = urlopen(args.url).read().decode()
     html_soup = bs4.BeautifulSoup(html_source, 'html.parser')
     combined_dataframe = None
+
+    def get_cell_effective_text(cell):
+        if cell.img:
+            return ' '.join([img.get('alt') for img in cell.find_all('img')])
+        else:
+            return cell.get_text().strip()
 
     for wikitable in html_soup.find_all('table', class_='wikitable'):
         headers = []
